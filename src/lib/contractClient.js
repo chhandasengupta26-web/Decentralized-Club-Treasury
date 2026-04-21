@@ -18,7 +18,7 @@ const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
  */
 export const CONTRACT_ID = 'CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 
-const rpcServer = new StellarSdk.SorobanRpc.Server(SOROBAN_RPC_URL);
+const rpcServer = new StellarSdk.rpc.Server(SOROBAN_RPC_URL);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -40,11 +40,11 @@ async function invokeContract(sourceKeypair, method, ...args) {
   // Simulate the transaction to get the prepared version
   const simulated = await rpcServer.simulateTransaction(tx);
 
-  if (StellarSdk.SorobanRpc.Api.isSimulationError(simulated)) {
+  if (StellarSdk.rpc.Api.isSimulationError(simulated)) {
     throw new Error(`Simulation failed: ${simulated.error}`);
   }
 
-  const preparedTx = StellarSdk.SorobanRpc.assembleTransaction(tx, simulated).build();
+  const preparedTx = StellarSdk.rpc.assembleTransaction(tx, simulated).build();
   preparedTx.sign(sourceKeypair);
 
   const sendResponse = await rpcServer.sendTransaction(preparedTx);
@@ -92,7 +92,7 @@ async function queryContract(method, ...args) {
 
   const simulated = await rpcServer.simulateTransaction(tx);
 
-  if (StellarSdk.SorobanRpc.Api.isSimulationError(simulated)) {
+  if (StellarSdk.rpc.Api.isSimulationError(simulated)) {
     throw new Error(`Query failed: ${simulated.error}`);
   }
 
